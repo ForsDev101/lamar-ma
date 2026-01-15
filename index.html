@@ -2,188 +2,481 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Özel Tema</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Özel Tasarım</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-black: #000000;
+            --neon-pink: #ff2d95;
+            --soft-pink: #ff4da6;
+            --pink-glow: rgba(255, 45, 149, 0.3);
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.9);
+            --glass-bg: rgba(15, 15, 15, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            transition: background 1.5s ease;
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-black);
+            color: var(--text-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: pan-y;
         }
 
-        /* İlk görünüm - tam siyah */
+        /* Başlangıç ekranı */
         .initial-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
+            background: linear-gradient(135deg, var(--dark-black) 0%, #1a001a 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            cursor: pointer;
-            transition: opacity 1.5s ease;
-        }
-
-        .initial-text {
-            color: #fff;
-            font-size: 3rem;
-            text-align: center;
-            animation: pulse 2s infinite;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 20px;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+        .initial-logo {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            animation: logoFloat 3s ease-in-out infinite;
+            text-shadow: 0 0 20px var(--neon-pink);
         }
 
-        /* Ana içerik - başlangıçta gizli */
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        .initial-text {
+            font-size: 1.8rem;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 2px;
+            animation: textPulse 2s infinite;
+            margin-bottom: 40px;
+            background: linear-gradient(90deg, var(--text-white), var(--soft-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        .tap-instruction {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: fadeInOut 2s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Ana içerik */
         .main-content {
             display: none;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #000000 0%, #1a001a 30%, #330033 70%, #660066 100%);
+            min-height: 100vh;
+            background: linear-gradient(135deg, 
+                var(--primary-black) 0%, 
+                #150015 30%, 
+                #250025 70%, 
+                #350035 100%);
             position: relative;
             overflow: hidden;
         }
 
-        /* Lale emojileri */
+        /* Partikül efekti */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-pink);
+            border-radius: 50%;
+            filter: blur(1px);
+            opacity: 0.7;
+        }
+
+        /* Lale emojileri - gelişmiş */
         .lale {
             position: absolute;
-            font-size: 2rem;
-            top: -50px;
+            font-size: 2.2rem;
+            top: -60px;
             user-select: none;
-            z-index: 1;
-            transition: transform 0.1s;
-            text-shadow: 0 0 5px rgba(255, 20, 147, 0.7);
+            pointer-events: none;
+            z-index: 5;
+            text-shadow: 0 0 15px var(--pink-glow);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Müzik kontrolü */
-        .music-control {
+        @keyframes fallSlow {
+            0% { 
+                top: -60px; 
+                transform: rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { 
+                top: 110vh; 
+                transform: rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Merkezi müzik kontrolü - PROFESYONEL TASARIM */
+        .music-center-control {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 50;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
             opacity: 0;
-            transition: opacity 1.5s ease 3.5s;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
         }
 
-        .music-btn {
-            background: rgba(255, 20, 147, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
+        .music-center-control.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .music-center-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 45, 149, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
-        .music-btn:hover {
-            background: rgba(255, 20, 147, 0.4);
-            transform: scale(1.1);
+        .music-center-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 45, 149, 0.2);
         }
 
-        /* Gizli mesaj */
+        .music-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-white);
+            letter-spacing: 1px;
+        }
+
+        .song-info {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .song-info i {
+            color: var(--neon-pink);
+            margin-right: 8px;
+        }
+
+        .music-center-btn {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--soft-pink));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 20px rgba(255, 45, 149, 0.3),
+                0 0 30px rgba(255, 45, 149, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-center-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .music-center-btn:hover::after,
+        .music-center-btn:active::after {
+            opacity: 1;
+        }
+
+        .music-center-btn:active {
+            transform: scale(0.95);
+        }
+
+        .music-center-btn.playing {
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 10px 20px rgba(255, 45, 149, 0.3),
+                    0 0 30px rgba(255, 45, 149, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 10px 20px rgba(255, 45, 149, 0.5),
+                    0 0 40px rgba(255, 45, 149, 0.3);
+            }
+        }
+
+        /* Gelişmiş gizli mesaj */
         .hidden-message {
             position: fixed;
-            bottom: 100px;
+            bottom: 50px;
             left: 0;
             width: 100%;
             text-align: center;
-            color: rgba(255, 255, 255, 0);
-            font-size: 1.8rem;
+            color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
             padding: 20px;
-            transition: color 3s ease;
-            z-index: 40;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px rgba(255, 20, 147, 0);
+            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 50;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 45, 149, 0.1) 50%, 
+                transparent 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
         }
 
-        .message-visible {
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
+        .hidden-message.visible {
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 
+                0 0 20px var(--pink-glow),
+                0 0 40px rgba(255, 45, 149, 0.2);
+            transform: translateY(0);
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 45, 149, 0.3) 50%, 
+                transparent 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
         }
 
-        /* Responsive tasarım */
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--soft-pink));
+            width: 0%;
+            transition: width 0.1s linear;
+            border-radius: 2px;
+        }
+
+        /* Mobil optimizasyon */
         @media (max-width: 768px) {
             .initial-text {
-                font-size: 2.2rem;
+                font-size: 1.5rem;
+            }
+            
+            .music-center-control {
+                width: 85%;
+                max-width: 280px;
+            }
+            
+            .music-center-container {
+                padding: 25px 20px;
+            }
+            
+            .music-title {
+                font-size: 1.2rem;
+            }
+            
+            .song-info {
+                font-size: 0.9rem;
+            }
+            
+            .music-center-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 1.5rem;
             }
             
             .hidden-message {
-                font-size: 1.4rem;
-                bottom: 120px;
+                font-size: 1.1rem;
+                padding: 15px;
+                bottom: 40px;
             }
             
             .lale {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
         }
 
         @media (max-width: 480px) {
             .initial-text {
-                font-size: 1.8rem;
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+            }
+            
+            .initial-logo {
+                font-size: 2rem;
+            }
+            
+            .music-center-control {
+                width: 90%;
+                max-width: 260px;
+            }
+            
+            .music-center-container {
+                padding: 20px 15px;
+                border-radius: 20px;
             }
             
             .hidden-message {
-                font-size: 1.2rem;
-                padding: 15px;
+                font-size: 1rem;
+                bottom: 30px;
+            }
+        }
+
+        /* Landscape mod için */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .initial-screen {
+                padding: 10px;
             }
             
-            .music-control {
-                bottom: 20px;
-                right: 20px;
+            .initial-logo {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
             }
+            
+            .initial-text {
+                font-size: 1.2rem;
+                margin-bottom: 20px;
+            }
+            
+            .music-center-control {
+                max-width: 250px;
+            }
+            
+            .hidden-message {
+                bottom: 20px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Karanlık mod optimizasyonu */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --glass-bg: rgba(10, 10, 10, 0.85);
+            }
+        }
+
+        /* Animasyon performansı */
+        .will-change {
+            will-change: transform, opacity;
         }
     </style>
 </head>
 <body>
-    <!-- İlk ekran -->
+    <!-- Başlangıç ekranı -->
     <div class="initial-screen" id="initialScreen">
-        <div class="initial-text">
-            Ekrana Tıklayınız
-        </div>
+        <div class="initial-logo">✧</div>
+        <div class="initial-text">EKRNA TIKLAYINIZ</div>
+        <div class="tap-instruction">Tıklayarak deneyimi başlat</div>
     </div>
 
     <!-- Ana içerik -->
     <div class="main-content" id="mainContent">
+        <!-- Partikül efekti -->
+        <div class="particles" id="particles"></div>
         <!-- Lale emojileri buraya eklenecek -->
     </div>
 
-    <!-- Müzik kontrolü -->
-    <div class="music-control" id="musicControl">
-        <button class="music-btn" id="musicBtn">
-            <i class="fas fa-play"></i>
-        </button>
+    <!-- Merkezi müzik kontrolü -->
+    <div class="music-center-control" id="musicControl">
+        <div class="music-center-container">
+            <h2 class="music-title">MÜZİK</h2>
+            <div class="song-info">
+                <i class="fas fa-music"></i>Şebnem Ferah - Od
+            </div>
+            <button class="music-center-btn" id="musicBtn">
+                <i class="fas fa-play"></i>
+            </button>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Gizli mesaj -->
     <div class="hidden-message" id="hiddenMessage">
-        Geçmişteki Hatalarım Yüzünden Özür Dilerim Beni Affedermisin?
+        Geçmişteki Hatalarım Yüzünden Özür Dilerim<br>Beni Affedermisin?
     </div>
 
     <!-- Audio element -->
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" preload="metadata">
         <source src="https://assets.codepen.io/1468070/od-sample.mp3" type="audio/mpeg">
         Tarayıcınız audio elementini desteklemiyor.
     </audio>
@@ -196,29 +489,79 @@
         const musicBtn = document.getElementById('musicBtn');
         const hiddenMessage = document.getElementById('hiddenMessage');
         const bgMusic = document.getElementById('bgMusic');
+        const progressBar = document.getElementById('progressBar');
+        const particlesContainer = document.getElementById('particles');
         
         // Değişkenler
         let lales = [];
-        let laleCount = 50;
+        let laleCount = 35;
         let isRaining = true;
         let rainTimeout;
         let accelerometer = null;
+        let particleCount = 50;
+        let particles = [];
         
         // İlk ekrana tıklama
         initialScreen.addEventListener('click', startExperience);
+        // Mobil için touch event
+        initialScreen.addEventListener('touchstart', startExperience, { passive: true });
         
-        // Müzik butonuna tıklama
-        musicBtn.addEventListener('click', toggleMusic);
+        // Partikül sistemi oluştur
+        function createParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Rastgele pozisyon
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                
+                // Rastgele boyut
+                const size = 2 + Math.random() * 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Rastgele opaklık
+                particle.style.opacity = 0.3 + Math.random() * 0.4;
+                
+                // Rastgele animasyon
+                const duration = 3 + Math.random() * 5;
+                const delay = Math.random() * 2;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                // Stil ekle
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes float {
+                        0%, 100% { transform: translate(0, 0) scale(1); }
+                        25% { transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px) scale(1.1); }
+                        50% { transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px) scale(0.9); }
+                        75% { transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px) scale(1.05); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                particlesContainer.appendChild(particle);
+                particles.push(particle);
+            }
+        }
         
         // Deneyimi başlat
-        function startExperience() {
+        function startExperience(e) {
+            // Mobil için touch event'i önle
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+            
             // İlk ekranı yavaşça kaldır
             initialScreen.style.opacity = '0';
             
-            // Ana içeriği göster
             setTimeout(() => {
                 initialScreen.style.display = 'none';
                 mainContent.style.display = 'block';
+                
+                // Partikülleri oluştur
+                createParticles();
                 
                 // Lale yağmurunu başlat
                 startLaleRain();
@@ -228,45 +571,41 @@
                 
                 // Müzik kontrolünü göster
                 setTimeout(() => {
-                    musicControl.style.opacity = '1';
+                    musicControl.classList.add('visible');
                 }, 3500);
                 
                 // Hareket sensörünü başlat
                 initMotionSensor();
-            }, 1500);
+                
+                // Progress bar güncelleme
+                bgMusic.addEventListener('timeupdate', updateProgressBar);
+                
+            }, 1200);
         }
         
         // Lale yağmuru oluştur
         function startLaleRain() {
-            const mainContent = document.getElementById('mainContent');
-            
             for (let i = 0; i < laleCount; i++) {
                 // Rastgele pozisyon
                 const leftPos = Math.random() * 100;
                 
                 // Lale elementi oluştur
                 const lale = document.createElement('div');
-                lale.className = 'lale';
+                lale.className = 'lale will-change';
                 lale.innerHTML = '🌸';
                 lale.style.left = `${leftPos}vw`;
                 
                 // Rastgele boyut
-                const size = 20 + Math.random() * 30;
+                const size = 25 + Math.random() * 40;
                 lale.style.fontSize = `${size}px`;
                 
                 // Rastgele düşme hızı
-                const fallSpeed = 1 + Math.random() * 2;
-                lale.style.animation = `fall ${fallSpeed}s linear infinite`;
+                const fallSpeed = 3 + Math.random() * 4;
+                lale.style.animation = `fallSlow ${fallSpeed}s linear forwards`;
                 
-                // Lale stilini ekle
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    @keyframes fall {
-                        0% { top: -50px; transform: rotate(0deg); }
-                        100% { top: 100vh; transform: rotate(360deg); }
-                    }
-                `;
-                document.head.appendChild(style);
+                // Rastgele başlangıç gecikmesi
+                const delay = Math.random() * 2;
+                lale.style.animationDelay = `${delay}s`;
                 
                 // Laleyi ekle
                 mainContent.appendChild(lale);
@@ -277,7 +616,9 @@
                     x: leftPos,
                     y: 0,
                     speed: fallSpeed,
-                    size: size
+                    size: size,
+                    velocityX: 0,
+                    velocityY: 0
                 });
             }
         }
@@ -286,7 +627,7 @@
         function stopLaleRain() {
             isRaining = false;
             
-            // Tüm lalelerin animasyonunu durdur
+                   // Tüm lalelerin animasyonunu durdur ve pozisyonlarını kaydet
             lales.forEach(lale => {
                 lale.element.style.animation = 'none';
                 
@@ -299,128 +640,181 @@
         
         // Hareket sensörünü başlat
         function initMotionSensor() {
-            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                // iOS 13+ için izin iste
-                DeviceMotionEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            setupMotionListeners();
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                // Diğer cihazlar
-                setupMotionListeners();
+            if (typeof DeviceMotionEvent !== 'undefined') {
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    // iOS 13+ için izin iste
+                    DeviceMotionEvent.requestPermission()
+                        .then(permissionState => {
+                            if (permissionState === 'granted') {
+                                setupMotionListeners();
+                            }
+                        })
+                        .catch(console.error);
+                } else {
+                    // Diğer cihazlar
+                    setupMotionListeners();
+                }
             }
         }
         
         // Hareket dinleyicilerini kur
         function setupMotionListeners() {
-            window.addEventListener('devicemotion', handleMotion);
-        }
-        
-        // Hareket işleyici
-        function handleMotion(event) {
-            if (isRaining) return; // Yağmur devam ederken hareket etmesin
+            let lastX = 0;
+            let lastY = 0;
+            let lastTime = Date.now();
             
-            const acceleration = event.accelerationIncludingGravity;
-            if (!acceleration) return;
-            
-            // X ve Y eksenlerindeki ivmeyi al
-            const x = acceleration.x || 0;
-            const y = acceleration.y || 0;
-            
-            // Laleleri hareket ettir
-            moveLales(x, y);
+            window.addEventListener('devicemotion', (event) => {
+                if (isRaining) return;
+                
+                const acceleration = event.accelerationIncludingGravity;
+                if (!acceleration) return;
+                
+                const currentTime = Date.now();
+                const deltaTime = (currentTime - lastTime) / 1000;
+                
+                // Hızı hesapla
+                const velocityX = lastX + (acceleration.x || 0) * deltaTime;
+                const velocityY = lastY + (acceleration.y || 0) * deltaTime;
+                
+                // Laleleri hareket ettir
+                moveLales(velocityX * 2, velocityY * 2);
+                
+                // Değerleri kaydet
+                lastX = velocityX * 0.9; // Sönümleme
+                lastY = velocityY * 0.9;
+                lastTime = currentTime;
+            }, { passive: true });
         }
         
         // Laleleri hareket ettir
-        function moveLales(x, y) {
-            // Hareket miktarını sınırla
-            const moveX = x * 0.5;
-            const moveY = y * 0.5;
-            
+        function moveLales(velocityX, velocityY) {
             lales.forEach(lale => {
+                // Hızı güncelle
+                lale.velocityX = lale.velocityX * 0.8 + velocityX * 0.2;
+                lale.velocityY = lale.velocityY * 0.8 + velocityY * 0.2;
+                
                 // Yeni pozisyonları hesapla
-                let newX = lale.x + moveX;
-                let newY = lale.y + moveY;
+                let newX = lale.x + lale.velocityX;
+                let newY = lale.y + lale.velocityY;
                 
                 // Ekran sınırlarını kontrol et
                 newX = Math.max(0, Math.min(newX, 100));
-                newY = Math.max(0, Math.min(newY, 100));
+                newY = Math.max(-5, Math.min(newY, 105));
                 
                 // Pozisyonları güncelle
                 lale.x = newX;
                 lale.y = newY;
                 
                 // Elementi hareket ettir
+                lale.element.style.transform = `translate(${lale.velocityX * 2}px, ${lale.velocityY * 2}px)`;
                 lale.element.style.left = `${newX}vw`;
                 lale.element.style.top = `${newY}vh`;
             });
         }
         
-        // Müziği aç/kapa
+        // Müzik kontrolü
+        let isPlaying = false;
+        
+        musicBtn.addEventListener('click', toggleMusic);
+        musicBtn.addEventListener('touchstart', toggleMusic, { passive: true });
+        
         function toggleMusic() {
             if (bgMusic.paused) {
                 bgMusic.play();
                 musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                musicBtn.classList.add('playing');
+                isPlaying = true;
                 
                 // Mesajı göster
                 setTimeout(() => {
-                    hiddenMessage.classList.add('message-visible');
-                }, 500);
+                    hiddenMessage.classList.add('visible');
+                }, 800);
             } else {
                 bgMusic.pause();
                 musicBtn.innerHTML = '<i class="fas fa-play"></i>';
-                
-                // Mesajı gizle
-                hiddenMessage.classList.remove('message-visible');
+                musicBtn.classList.remove('playing');
+                isPlaying = false;
             }
         }
         
-        // Fare hareketi için alternatif (masaüstü bilgisayarlar)
+        // Progress bar güncelleme
+        function updateProgressBar() {
+            const currentTime = bgMusic.currentTime;
+            const duration = bgMusic.duration;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+        
+        // Müzik bitince
+        bgMusic.addEventListener('ended', () => {
+            musicBtn.innerHTML = '<i class="fas fa-play"></i>';
+            musicBtn.classList.remove('playing');
+            progressBar.style.width = '0%';
+        });
+        
+        // Masaüstü için fare hareketi
+        let mouseX = 0;
+        let mouseY = 0;
+        
         document.addEventListener('mousemove', (e) => {
             if (isRaining || lales.length === 0) return;
             
-            // Fare pozisyonuna göre hareket
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
+            mouseX = e.clientX / window.innerWidth;
+            mouseY = e.clientY / window.innerHeight;
             
-            // Laleleri farenin ters yönünde hareket ettir (rüzgar efekti)
+            // Laleleri farenin ters yönünde hareket ettir
             lales.forEach((lale, index) => {
-                // Rastgele bir gecikme ekle
-                const delayFactor = index % 5;
+                const delayFactor = index % 7;
                 
                 setTimeout(() => {
-                    // Farenin tersi yönde hareket
-                    let newX = lale.x - (mouseX * 2 - 1) * 3;
-                    let newY = lale.y - (mouseY * 2 - 1) * 3;
+                    const moveX = (0.5 - mouseX) * 5;
+                    const moveY = (0.5 - mouseY) * 5;
                     
-                    // Sınırları kontrol et
+                    let newX = lale.x + moveX;
+                    let newY = lale.y + moveY;
+                    
                     newX = Math.max(0, Math.min(newX, 100));
-                    newY = Math.max(0, Math.min(newY, 100));
+                    newY = Math.max(-5, Math.min(newY, 105));
                     
-                    // Güncelle
                     lale.x = newX;
                     lale.y = newY;
                     lale.element.style.left = `${newX}vw`;
                     lale.element.style.top = `${newY}vh`;
-                }, delayFactor * 20);
+                }, delayFactor * 30);
             });
+        }, { passive: true });
+        
+        // Pencere boyutu değişikliği
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (!isRaining && lales.length > 0) {
+                    lales.forEach(lale => {
+                        lale.element.style.left = `${lale.x}vw`;
+                        lale.element.style.top = `${lale.y}vh`;
+                    });
+                }
+            }, 250);
         });
         
-        // Pencere boyutu değiştiğinde laleleri yeniden konumlandır
-        window.addEventListener('resize', () => {
-            if (!isRaining && lales.length > 0) {
-                lales.forEach(lale => {
-                    lale.element.style.left = `${lale.x}vw`;
-                    lale.element.style.top = `${lale.y}vh`;
-                });
+        // Performans optimizasyonu
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (!bgMusic.paused) {
+                    bgMusic.pause();
+                }
             }
         });
         
-        // Sayfa yüklendiğinde bir test mesajı
-        console.log("Sayfa yüklendi. Ekrana tıklayarak deneyimi başlatın.");
+        // Sayfa yüklendiğinde
+        console.log("Profesyonel mobil site yüklendi. 🚀");
+        
+        // iOS için özel optimizasyon
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.body.style.webkitBackfaceVisibility = 'hidden';
+            document.body.style.webkitTransform = 'translate3d(0,0,0)';
+        }
     </script>
 </body>
-      </html>
+</html>
